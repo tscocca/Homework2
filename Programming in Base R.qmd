@@ -1,0 +1,171 @@
+---
+title: "Programming in Base R"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+Theresa Scocca\
+Homework 2\
+ST 558 - Data Science for Statisticians\
+Due 03 September 2025
+
+## Task 1: Basic Vector Practice
+
+1.  Create the names I will use for each element in the the vectors I'll create. Though I wrote this chunk at Step 2 of the instructions, I moved it to the top so I could add the name assigning to the chunk where I created each vector.
+
+```{r}
+subject_names <- c(paste("Subject", 1:20, sep = "_"))
+```
+
+2.  Create 2 vectors containing the subject data provided.
+
+*Create the pre-treatment vector. At Step 2 of the instructions, I added code to the chunk to assign names to the elements.*
+
+```{r}
+Pre <- c(120, 151, 125, 126, 115, 132, 132, 129, 134, 139, 127, 122, 127, 135, 133, 128, 147, 138, 140, 132)
+names(Pre) <- subject_names
+print(Pre)
+```
+
+*Create the post-treatment vector. At Step 2 of the instructions, I added code to the chunk to assign names to the elements.*
+
+```{r}
+Post <- c(127, 145, 135, 122, 115, 122, 123, 126, 126, 129, 132, 146, 120, 114, 121, 120, 128, 120, 133, 115)
+names(Post) <- subject_names
+print(Post)
+```
+
+3.  Calculate the change in blood pressure for each subject.
+
+```{r}
+bp_change <- Pre - Post
+print(bp_change)
+```
+
+4.  Calculate the average decrease in blood pressure across all subjects.
+
+```{r}
+mean(bp_change)
+```
+
+5.  Identify the subjects who experienced a decrease in blood pressure after treatment.
+
+```{r}
+which(bp_change > 0)
+```
+
+6.  Subset a new vector containing only the subjects who had a decrease, or positive change, in their blood pressure.
+
+```{r}
+only_positives <- bp_change[bp_change > 0]
+print(only_positives)
+```
+
+7.  Calculate the average decrease in blood pressure for only the subset of subjects in which the blood pressure decreased.
+
+```{r}
+mean(only_positives)
+```
+
+## Task 2: Basic Data Frame practice
+
+1.  Create a data frame with four columns that show the subject, pre-treatment bp value, post-treatment bp value, and change in blood pressure.
+
+```{r}
+bp_dataframe <- data.frame(pre_bp = Pre, post_bp = Post, diff_bp = bp_change)
+print(bp_dataframe)
+```
+
+2.  Show only the rows of this data frame for the subjects with a negative change in blood pressure, ie, increase in blood pressure.
+
+```{r}
+bp_dataframe[bp_dataframe$diff_bp < 0,]
+```
+
+3.  Add a column (named bp_120) indicating TRUE (1) when the post-treatment blood pressure is \<120 and FALSE (0) when the post-treatment blood pressure is \>120.
+
+```{r}
+bp_dataframe2 <- data.frame(pre_bp = Pre, post_bp = Post, diff_bp = bp_change, bp_120 = c(bp_dataframe$post_bp < 120))
+print(bp_dataframe2)
+```
+
+4.  Print out final data frame using kritr::kable(x) function
+
+```{r}
+knitr::kable(bp_dataframe2)
+```
+
+## Task 3: List Practice
+
+1.  Create a data frame containing the data from placebo-treated subjects.
+
+*Create the names to be used for the placebo subject vectors.*
+
+```{r}
+subject_names_placebo <- c(paste("Subject", 1:10, sep = "_"))
+```
+
+*Create a pre-treatment vector for the placebo subjects.*
+
+```{r}
+Pre_placebo <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+names(Pre_placebo) <- subject_names_placebo
+print(Pre_placebo)
+```
+
+*Create a post-treatment vector for the placebo subjects.*
+
+```{r}
+Post_placebo <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+names(Post_placebo) <- subject_names_placebo
+print(Post_placebo)
+```
+
+*Calculate the change in blood pressure for each subject.*
+
+```{r}
+bp_change_placebo <- Pre_placebo - Post_placebo
+print(bp_change_placebo)
+```
+
+*Create the placebo subject data frame, including adding a column (named bp_120_placebo) indicating TRUE (1) when the post-treatment blood pressure is \<120 and FALSE (0) when the post-treatment blood pressure is \>120.*
+
+```{r}
+bp_dataframe_placebo <- data.frame(pre_bp = Pre_placebo, post_bp = Post_placebo, diff_bp = bp_change_placebo, bp_120_placebo = c(Post_placebo < 120))
+print(bp_dataframe_placebo)
+```
+
+2.  Create a list with 2 elements, one containing the data frame created for each group of subjects.
+
+```{r}
+list_bp_data <- list(treatment = bp_dataframe2, placebo = bp_dataframe_placebo)
+print(list_bp_data)
+```
+
+3.  Access the first list element, treatment, using 3 different types of syntax.
+
+*Syntax 1*
+
+```{r}
+list_bp_data[1]
+```
+
+*Syntax 2*
+
+```{r}
+list_bp_data[[1]]
+```
+
+*Syntax 3*
+
+```{r}
+list_bp_data$treatment
+```
+
+4.  Access the pre_bp column of the placebo data frame from the created list using one line of code.
+
+```{r}
+list_bp_data[[2]][4]
+```
